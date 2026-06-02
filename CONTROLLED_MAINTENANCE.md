@@ -23,7 +23,7 @@ This repository is not an open-ended wiki. It is a governed maintenance system. 
 
 Use when a human requests a new module, for example:
 
-> 我期望新增一个模块 `Observability`，用于统一服务监控、日志、告警和 SLO 运营。
+> Add a module named `Observability` for unified service monitoring, logging, alerting, and SLO operations.
 
 The agent may:
 
@@ -44,7 +44,7 @@ The agent must not:
 
 Use when an approved source changes, for example:
 
-> Confluence 页面 `ABC123` 有更新，请同步到 `modules/05-aws-compliance/source-mirrors/aws-control-evidence.md`。
+> Confluence page `ABC123` has been updated; sync it to `modules/05-aws-compliance/source-mirrors/aws-control-evidence.md`.
 
 The agent or scheduled workflow may:
 

@@ -4,7 +4,7 @@
 Example:
 python scripts/create_module.py \
   --name "Observability" \
-  --purpose "统一服务监控、日志、告警和 SLO 运营" \
+  --purpose "unified service monitoring, logging, alerting, and SLO operations" \
   --source-uri "https://github.com/org/repo/issues/123" \
   --source-title "New module request: Observability" \
   --observed-at-utc "2026-06-02T16:00:00Z" \
