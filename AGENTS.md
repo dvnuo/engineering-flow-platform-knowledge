@@ -1,8 +1,15 @@
 ---
 title: Agent Operating Rules
-maintenance_action: policy_seed
-updated_at_utc: "2026-06-02T00:00:00Z"
+maintenance_action: policy_update
+updated_at_utc: "2026-06-02T07:42:21Z"
 source:
+  type: user_request
+  uri: "conversation://current-thread"
+  title: "Require repository edits to be written in English"
+  observed_at_utc: "2026-06-02T07:42:21Z"
+  retrieved_at_utc: "2026-06-02T07:42:21Z"
+  version: "n/a"
+previous_source:
   type: initial_design
   uri: "internal-design-session"
   title: "Agent constrained maintenance rules"
@@ -16,6 +23,10 @@ source_of_truth: true
 # Agent Operating Rules
 
 Agents are not general editors of this repository. Agents are constrained maintainers.
+
+## Repository language
+
+All agent-created or agent-updated repository content must be written in English. If approved source content is not in English, the agent must stop and require a human-approved English source or translation before updating repository files.
 
 ## Allowed actions
 
