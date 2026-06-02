@@ -1,4 +1,4 @@
-# Engineering Flow & Platform Knowledge
+# Engineering Flow Platform Knowledge
 
 A governed knowledge repository for engineering flows, platform practices, and controlled source-based updates.
 
