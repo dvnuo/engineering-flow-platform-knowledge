@@ -1,8 +1,15 @@
 ---
 title: Controlled Maintenance Policy
-maintenance_action: policy_seed
-updated_at_utc: "2026-06-02T00:00:00Z"
+maintenance_action: policy_update
+updated_at_utc: "2026-06-02T07:42:21Z"
 source:
+  type: user_request
+  uri: "conversation://current-thread"
+  title: "Require repository edits to be written in English"
+  observed_at_utc: "2026-06-02T07:42:21Z"
+  retrieved_at_utc: "2026-06-02T07:42:21Z"
+  version: "n/a"
+previous_source:
   type: initial_design
   uri: "internal-design-session"
   title: "Controlled repository maintenance policy"
@@ -16,6 +23,12 @@ source_of_truth: true
 # Controlled Maintenance Policy
 
 This repository is not an open-ended wiki. It is a governed maintenance system. Humans and agents may update it only through approved maintenance actions.
+
+## Repository language
+
+All repository edits must be written in English. This applies to human-authored content, agent-generated content, source mirror content, maintenance logs, registry entries, manifest entries, and pull request text.
+
+If an approved external source is not in English, do not sync it into the repository until a human-approved English source or translation is available.
 
 ## Allowed maintenance actions
 
