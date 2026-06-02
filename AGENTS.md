@@ -29,7 +29,7 @@ Agents may perform only these two actions:
 Trigger examples:
 
 ```text
-我期望新增一个模块 Observability，用于统一服务监控、日志、告警和 SLO 运营。
+Add a module named Observability for unified service monitoring, logging, alerting, and SLO operations.
 Add a module named Developer Experience for onboarding, tooling, and engineering productivity.
 ```
 
@@ -50,7 +50,7 @@ Agent must not create detailed standards, playbooks, or policies for the new mod
 Trigger examples:
 
 ```text
-Confluence 页面 123456789 有更新，请同步到 modules/05-aws-compliance/source-mirrors/aws-control-evidence.md。
+Confluence page 123456789 has been updated; sync it to modules/05-aws-compliance/source-mirrors/aws-control-evidence.md.
 The Confluence page https://... has been updated; sync it to modules/07-service-host-platform/source-mirrors/onboarding.md.
 ```
 

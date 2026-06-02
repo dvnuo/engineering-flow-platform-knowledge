@@ -17,8 +17,8 @@ source_of_truth: true
 
 | Input pattern | Action | Output |
 |---|---|---|
-| “新增一个模块 X，用于 Y” | `add_module` | New module folder, registry update, PR |
-| “Confluence 页面 X 有更新，同步到 Y” | `source_sync` | Target mirror update, source log, PR |
-| “帮我整理一下这个主题” | Not allowed directly | Human must reframe into one approved action |
-| “帮我重构整个目录” | Not allowed | Human governance review required |
-| “帮我写一个新标准” | Not allowed unless source-backed | Requires source sync or human-authored draft |
+| “Add a module named X for Y” | `add_module` | New module folder, registry update, PR |
+| “Confluence page X has been updated; sync it to Y” | `source_sync` | Target mirror update, source log, PR |
+| “Help me organize this topic” | Not allowed directly | Human must reframe into one approved action |
+| “Help me refactor the whole directory” | Not allowed | Human governance review required |
+| “Help me write a new standard” | Not allowed unless source-backed | Requires source sync or human-authored draft |
