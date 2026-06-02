@@ -1,4 +1,6 @@
-# Team Ops Governed Maintenance Hub
+# Engineering Flow & Platform Knowledge
+
+A governed knowledge repository for engineering flows, platform practices, and controlled source-based updates.
 
 This repository is the controlled knowledge and operations hub for the team. It is designed for a small enablement team that supports larger engineering, platform, AI, release, cyber, AWS compliance, AWS cost, and service-hosting workstreams.
 
