@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "updated_at_utc": "2026-06-02T00:00:00Z",
+  "entries": [
+    {
+      "id": "example-confluence-source",
+      "enabled": false,
+      "source_type": "confluence",
+      "source_uri": "https://your-company.atlassian.net/wiki/spaces/ABC/pages/123456789/Page+Title",
+      "source_id": "123456789",
+      "source_title": "Example Confluence Page",
+      "target_path": "modules/05-aws-compliance/source-mirrors/example-confluence-page.md",
+      "owner": "aws-compliance-owner",
+      "reviewer": "security-compliance-reviewer",
+      "schedule": "daily",
+      "content_policy": "mirror_only"
+    }
+  ]
+}

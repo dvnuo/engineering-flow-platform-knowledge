@@ -1,0 +1,16 @@
+id: "02-standard-cicd"
+name: "Standard CI/CD"
+purpose: "Standard CI/CD workflows, pipeline readiness, workflow evidence"
+owner: "cicd-owner"
+reviewer: "team-ops-steward"
+status: draft
+created_at_utc: "2026-06-02T00:00:00Z"
+created_from:
+  type: user_request
+  uri: "internal-design-session"
+  title: "Initial module seed"
+  observed_at_utc: "2026-06-02T00:00:00Z"
+  retrieved_at_utc: "2026-06-02T00:00:00Z"
+  version: "n/a"
+allowed_maintenance_actions:
+  - source_sync

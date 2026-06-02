@@ -1,0 +1,16 @@
+id: "01-ai-adoption"
+name: "AI Adoption"
+purpose: "AI adoption, Copilot usage, agent usage, AI champion enablement"
+owner: "ai-adoption-owner"
+reviewer: "team-ops-steward"
+status: draft
+created_at_utc: "2026-06-02T00:00:00Z"
+created_from:
+  type: user_request
+  uri: "internal-design-session"
+  title: "Initial module seed"
+  observed_at_utc: "2026-06-02T00:00:00Z"
+  retrieved_at_utc: "2026-06-02T00:00:00Z"
+  version: "n/a"
+allowed_maintenance_actions:
+  - source_sync

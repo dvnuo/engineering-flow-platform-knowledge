@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "updated_at_utc": "2026-06-02T00:00:00Z",
+  "maintenance_model": "controlled",
+  "allowed_actions": [
+    "add_module",
+    "source_sync"
+  ],
+  "modules": [
+    {
+      "id": "01-ai-adoption",
+      "name": "AI Adoption",
+      "purpose": "AI adoption, Copilot usage, agent usage, AI champion enablement",
+      "owner": "ai-adoption-owner",
+      "status": "draft"
+    },
+    {
+      "id": "02-standard-cicd",
+      "name": "Standard CI/CD",
+      "purpose": "Standard CI/CD workflows, pipeline readiness, workflow evidence",
+      "owner": "cicd-owner",
+      "status": "draft"
+    },
+    {
+      "id": "03-release-quality",
+      "name": "Release Quality",
+      "purpose": "Release readiness, rollback, post-release quality, change evidence",
+      "owner": "release-quality-owner",
+      "status": "draft"
+    },
+    {
+      "id": "04-cyberflows",
+      "name": "Cyberflows",
+      "purpose": "Security operational flows: vulnerability, exception, escalation, evidence",
+      "owner": "security-owner",
+      "status": "draft"
+    },
+    {
+      "id": "05-aws-compliance",
+      "name": "AWS Compliance",
+      "purpose": "AWS control evidence, workload compliance, audit readiness",
+      "owner": "aws-compliance-owner",
+      "status": "draft"
+    },
+    {
+      "id": "06-aws-cost-finops",
+      "name": "AWS Cost / FinOps",
+      "purpose": "Cost ownership, tagging, allocation, anomaly review, optimization",
+      "owner": "finops-owner",
+      "status": "draft"
+    },
+    {
+      "id": "07-service-host-platform",
+      "name": "Service Host Platform",
+      "purpose": "Service onboarding, hosting patterns, platform readiness, runtime support",
+      "owner": "service-host-platform-owner",
+      "status": "draft"
+    }
+  ]
+}
