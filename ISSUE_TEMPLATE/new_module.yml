@@ -1,0 +1,51 @@
+name: New Module Request
+description: Request a new governed module. This is one of the only two allowed agent maintenance actions.
+title: "[add_module] <module name>"
+labels: ["maintenance:add_module", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this only to request a new module. The agent may create structure, not detailed standards.
+  - type: input
+    id: module_name
+    attributes:
+      label: Module name
+      placeholder: Observability
+    validations:
+      required: true
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Module purpose
+      placeholder: 用于统一服务监控、日志、告警和 SLO 运营。
+    validations:
+      required: true
+  - type: input
+    id: requested_at_utc
+    attributes:
+      label: Request timestamp UTC
+      placeholder: 2026-06-02T16:00:00Z
+    validations:
+      required: true
+  - type: input
+    id: source_uri
+    attributes:
+      label: Source URI or request identifier
+      placeholder: GitHub Issue URL, Teams permalink, or internal request ID
+    validations:
+      required: true
+  - type: input
+    id: owner
+    attributes:
+      label: Proposed owner
+      placeholder: observability-owner
+    validations:
+      required: true
+  - type: input
+    id: reviewer
+    attributes:
+      label: Proposed reviewer
+      placeholder: sre-reviewer
+    validations:
+      required: true

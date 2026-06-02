@@ -1,0 +1,75 @@
+name: Source Sync Request
+description: Request sync from an approved source into a governed target file.
+title: "[source_sync] <source title> -> <target path>"
+labels: ["maintenance:source_sync", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this only when an approved external source has changed and should be mirrored into this repository.
+  - type: dropdown
+    id: source_type
+    attributes:
+      label: Source type
+      options:
+        - confluence
+        - github_issue
+        - manual_source
+    validations:
+      required: true
+  - type: input
+    id: source_uri
+    attributes:
+      label: Source URI
+      placeholder: https://your-company.atlassian.net/wiki/spaces/ABC/pages/123456789/Page+Title
+    validations:
+      required: true
+  - type: input
+    id: source_id
+    attributes:
+      label: Source ID
+      placeholder: 123456789
+    validations:
+      required: true
+  - type: input
+    id: source_title
+    attributes:
+      label: Source title
+      placeholder: AWS Control Evidence Standard
+    validations:
+      required: true
+  - type: input
+    id: source_version
+    attributes:
+      label: Source version if known
+      placeholder: Confluence version number, page updated date, or unknown
+    validations:
+      required: true
+  - type: input
+    id: observed_at_utc
+    attributes:
+      label: Source update observed at UTC
+      placeholder: 2026-06-02T16:00:00Z
+    validations:
+      required: true
+  - type: input
+    id: target_path
+    attributes:
+      label: Target path
+      placeholder: modules/05-aws-compliance/source-mirrors/aws-control-evidence.md
+    validations:
+      required: true
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      placeholder: aws-compliance-owner
+    validations:
+      required: true
+  - type: input
+    id: reviewer
+    attributes:
+      label: Reviewer
+      placeholder: security-compliance-reviewer
+    validations:
+      required: true

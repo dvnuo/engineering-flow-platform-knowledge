@@ -1,0 +1,15 @@
+name: Validate controlled maintenance
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate provenance
+        run: python scripts/validate_provenance.py
+      - name: Validate registries
+        run: python scripts/validate_registries.py
