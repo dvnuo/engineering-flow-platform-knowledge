@@ -2,14 +2,140 @@ name: Validate controlled maintenance
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [master, main]
+  workflow_dispatch:
 
 jobs:
   validate:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+
       - name: Validate provenance
         run: python scripts/validate_provenance.py
+
       - name: Validate registries
         run: python scripts/validate_registries.py
+
+      - name: Validate agent guardrail files
+        run: |
+          python -m json.tool opencode.json >/dev/null
+          python -m json.tool .vscode/settings.json >/dev/null
+          test -f AGENTS.md
+          test -f .github/copilot-instructions.md
+          test -f .github/instructions/controlled-maintenance.instructions.md
+          grep -q 'applyTo: "\*\*"' .github/instructions/controlled-maintenance.instructions.md
+          grep -q '"instructions"' opencode.json
+          grep -q '"permission"' opencode.json
+
+      - name: Validate text hygiene and source log
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import unicodedata
+
+          errors = []
+
+          guardrail_files = [
+              "AGENTS.md",
+              ".github/copilot-instructions.md",
+              ".github/instructions/controlled-maintenance.instructions.md",
+              ".github/workflows/validate-maintenance.yml",
+              ".vscode/settings.json",
+              "CODEOWNERS",
+              "opencode.json",
+              "maintenance/source-log.jsonl",
+          ]
+
+          for file_name in guardrail_files:
+              path = Path(file_name)
+              if not path.exists():
+                  errors.append(f"{file_name}: missing")
+                  continue
+
+              data = path.read_bytes()
+
+              if b"\r" in data:
+                  errors.append(f"{file_name}: contains CR or CRLF line endings")
+
+              try:
+                  text = data.decode("utf-8")
+              except UnicodeDecodeError as exc:
+                  errors.append(f"{file_name}: not valid UTF-8: {exc}")
+                  continue
+
+              if not text.endswith("\n"):
+                  errors.append(f"{file_name}: must end with exactly one LF newline")
+
+              if text.endswith("\n\n"):
+                  errors.append(f"{file_name}: must not end with multiple blank lines")
+
+              for line_no, line in enumerate(text.split("\n"), 1):
+                  if line.endswith(" "):
+                      errors.append(f"{file_name}:{line_no}: trailing spaces are not allowed")
+
+                  for col_no, ch in enumerate(line, 1):
+                      cp = ord(ch)
+                      if 0x20 <= cp <= 0x7E:
+                          continue
+
+                      name = unicodedata.name(ch, "UNKNOWN")
+                      category = unicodedata.category(ch)
+                      errors.append(
+                          f"{file_name}:{line_no}:{col_no}: disallowed non-ASCII or control character "
+                          f"U+{cp:04X} {name} category={category}"
+                      )
+
+          agents_text = Path("AGENTS.md").read_text(encoding="utf-8")
+          if not agents_text.startswith("---\n"):
+              errors.append("AGENTS.md must start with YAML front matter delimiter '---'")
+          if "\n---\n" not in agents_text[4:]:
+              errors.append("AGENTS.md must contain a closing YAML front matter delimiter")
+          if "This file is the canonical source of truth" not in agents_text:
+              errors.append("AGENTS.md must state that it is the canonical source of truth")
+
+          instruction_text = Path(".github/instructions/controlled-maintenance.instructions.md").read_text(encoding="utf-8")
+          if not instruction_text.startswith('---\napplyTo: "**"\n---\n'):
+              errors.append('.github/instructions/controlled-maintenance.instructions.md must start with exact applyTo front matter')
+
+          source_log = Path("maintenance/source-log.jsonl")
+          source_log_lines = source_log.read_text(encoding="utf-8").splitlines()
+          if not source_log_lines:
+              errors.append("maintenance/source-log.jsonl must not be empty")
+
+          for line_no, line in enumerate(source_log_lines, 1):
+              if not line.strip():
+                  errors.append(f"maintenance/source-log.jsonl:{line_no}: blank lines are not allowed")
+                  continue
+
+              try:
+                  record = json.loads(line)
+              except json.JSONDecodeError as exc:
+                  errors.append(f"maintenance/source-log.jsonl:{line_no}: invalid JSON: {exc}")
+                  continue
+
+              for required_key in ["timestamp_utc", "maintenance_action", "source", "target", "owner", "reviewer"]:
+                  if required_key not in record:
+                      errors.append(f"maintenance/source-log.jsonl:{line_no}: missing {required_key}")
+
+              if not isinstance(record.get("target"), list):
+                  errors.append(f"maintenance/source-log.jsonl:{line_no}: target must be a list")
+
+          if errors:
+              print("Agent guardrail hygiene validation failed:")
+              for error in errors:
+                  print(f"- {error}")
+              raise SystemExit(1)
+
+          print("Agent guardrail hygiene validation passed.")
+          PY
+
+      - name: Validate CODEOWNERS placeholders are removed
+        run: |
+          if grep -q '@your-org/' CODEOWNERS; then
+            echo "CODEOWNERS still contains @your-org placeholders"
+            exit 1
+          fi
