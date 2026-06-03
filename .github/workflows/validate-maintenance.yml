@@ -2,14 +2,37 @@ name: Validate controlled maintenance
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [master, main]
+  workflow_dispatch:
 
 jobs:
   validate:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+
       - name: Validate provenance
         run: python scripts/validate_provenance.py
+
       - name: Validate registries
         run: python scripts/validate_registries.py
+
+      - name: Validate agent guardrail files
+        run: |
+          python -m json.tool opencode.json >/dev/null
+          python -m json.tool .vscode/settings.json >/dev/null
+          test -f AGENTS.md
+          test -f .github/copilot-instructions.md
+          test -f .github/instructions/controlled-maintenance.instructions.md
+          grep -q 'applyTo: "\*\*"' .github/instructions/controlled-maintenance.instructions.md
+          grep -q '"instructions"' opencode.json
+          grep -q '"permission"' opencode.json
+
+      - name: Validate CODEOWNERS placeholders are removed
+        run: |
+          if grep -q '@your-org/' CODEOWNERS; then
+            echo "CODEOWNERS still contains @your-org placeholders"
+            exit 1
+          fi

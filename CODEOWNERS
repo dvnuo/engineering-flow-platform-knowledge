@@ -1,18 +1,41 @@
 # Default ownership
-* @your-org/team-ops-stewards
+* @dvnuo
 
-# Controlled maintenance files
-/CONTROLLED_MAINTENANCE.md @your-org/team-ops-stewards @your-org/risk-compliance-reviewers
-/AGENTS.md @your-org/team-ops-stewards @your-org/ai-agent-stewards
-/SOURCE_SYNC.md @your-org/team-ops-stewards @your-org/platform-owners
-/module_registry.json @your-org/team-ops-stewards
-/sync_manifest.json @your-org/team-ops-stewards @your-org/platform-owners
+# Agent and AI instruction files
+/AGENTS.md @dvnuo
+/opencode.json @dvnuo
+/.vscode/settings.json @dvnuo
+/.github/copilot-instructions.md @dvnuo
+/.github/instructions/ @dvnuo
+
+# GitHub automation and review controls
+/.github/workflows/ @dvnuo
+/.github/pull_request_template.md @dvnuo
+/CODEOWNERS @dvnuo
+
+# Controlled maintenance policy
+/CONTROLLED_MAINTENANCE.md @dvnuo
+/MODULE_SYSTEM.md @dvnuo
+/SOURCE_SYNC.md @dvnuo
+/OPERATING_MODEL.md @dvnuo
+/SECURITY.md @dvnuo
+/README.md @dvnuo
+
+# Registries and manifests
+/module_registry.json @dvnuo
+/sync_manifest.json @dvnuo
+
+# Automation and validation scripts
+/scripts/ @dvnuo
+
+# Maintenance records
+/maintenance/ @dvnuo
 
 # Modules
-/modules/01-ai-adoption/ @your-org/ai-adoption-owners
-/modules/02-standard-cicd/ @your-org/cicd-owners
-/modules/03-release-quality/ @your-org/release-quality-owners
-/modules/04-cyberflows/ @your-org/security-owners
-/modules/05-aws-compliance/ @your-org/aws-compliance-owners
-/modules/06-aws-cost-finops/ @your-org/finops-owners
-/modules/07-service-host-platform/ @your-org/service-host-platform-owners
+/modules/01-ai-adoption/ @dvnuo
+/modules/02-standard-cicd/ @dvnuo
+/modules/03-release-quality/ @dvnuo
+/modules/04-cyberflows/ @dvnuo
+/modules/05-aws-compliance/ @dvnuo
+/modules/06-aws-cost-finops/ @dvnuo
+/modules/07-service-host-platform/ @dvnuo
