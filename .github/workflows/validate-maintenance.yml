@@ -30,6 +30,105 @@ jobs:
           grep -q '"instructions"' opencode.json
           grep -q '"permission"' opencode.json
 
+      - name: Validate text hygiene and source log
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import unicodedata
+
+          errors = []
+
+          guardrail_files = [
+              "AGENTS.md",
+              ".github/copilot-instructions.md",
+              ".github/instructions/controlled-maintenance.instructions.md",
+              ".github/workflows/validate-maintenance.yml",
+              ".vscode/settings.json",
+              "CODEOWNERS",
+              "opencode.json",
+              "maintenance/source-log.jsonl",
+          ]
+
+          bad_codepoints = set(range(0x202A, 0x202F))
+          bad_codepoints |= set(range(0x2066, 0x206A))
+          bad_codepoints |= {
+              0x061C,
+              0x200B,
+              0x200C,
+              0x200D,
+              0x200E,
+              0x200F,
+              0xFEFF,
+              0x00AD,
+          }
+
+          for file_name in guardrail_files:
+              path = Path(file_name)
+              if not path.exists():
+                  errors.append(f"{file_name}: missing")
+                  continue
+
+              try:
+                  text = path.read_text(encoding="utf-8")
+              except UnicodeDecodeError as exc:
+                  errors.append(f"{file_name}: not valid UTF-8: {exc}")
+                  continue
+
+              if "\r" in text:
+                  errors.append(f"{file_name}: contains CR or CRLF line endings")
+
+              for line_no, line in enumerate(text.splitlines(), 1):
+                  for col_no, ch in enumerate(line, 1):
+                      cp = ord(ch)
+                      if cp in bad_codepoints:
+                          name = unicodedata.name(ch, "UNKNOWN")
+                          errors.append(
+                              f"{file_name}:{line_no}:{col_no}: disallowed hidden/bidi character U+{cp:04X} {name}"
+                          )
+
+          agents_text = Path("AGENTS.md").read_text(encoding="utf-8")
+          if not agents_text.startswith("---\n"):
+              errors.append("AGENTS.md must start with YAML front matter delimiter '---'")
+          if "\n---\n" not in agents_text[4:]:
+              errors.append("AGENTS.md must contain a closing YAML front matter delimiter")
+
+          instruction_text = Path(".github/instructions/controlled-maintenance.instructions.md").read_text(encoding="utf-8")
+          if not instruction_text.startswith('---\napplyTo: "**"\n---\n'):
+              errors.append('.github/instructions/controlled-maintenance.instructions.md must start with exact applyTo front matter')
+
+          source_log = Path("maintenance/source-log.jsonl")
+          source_log_lines = source_log.read_text(encoding="utf-8").splitlines()
+          if not source_log_lines:
+              errors.append("maintenance/source-log.jsonl must not be empty")
+
+          for line_no, line in enumerate(source_log_lines, 1):
+              if not line.strip():
+                  errors.append(f"maintenance/source-log.jsonl:{line_no}: blank lines are not allowed")
+                  continue
+
+              try:
+                  record = json.loads(line)
+              except json.JSONDecodeError as exc:
+                  errors.append(f"maintenance/source-log.jsonl:{line_no}: invalid JSON: {exc}")
+                  continue
+
+              for required_key in ["timestamp_utc", "maintenance_action", "source", "target", "owner", "reviewer"]:
+                  if required_key not in record:
+                      errors.append(f"maintenance/source-log.jsonl:{line_no}: missing {required_key}")
+
+              if not isinstance(record.get("target"), list):
+                  errors.append(f"maintenance/source-log.jsonl:{line_no}: target must be a list")
+
+          if errors:
+              print("Agent guardrail hygiene validation failed:")
+              for error in errors:
+                  print(f"- {error}")
+              raise SystemExit(1)
+
+          print("Agent guardrail hygiene validation passed.")
+          PY
+
       - name: Validate CODEOWNERS placeholders are removed
         run: |
           if grep -q '@your-org/' CODEOWNERS; then
