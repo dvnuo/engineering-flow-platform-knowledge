@@ -50,48 +50,52 @@ jobs:
               "maintenance/source-log.jsonl",
           ]
 
-          bad_codepoints = set(range(0x202A, 0x202F))
-          bad_codepoints |= set(range(0x2066, 0x206A))
-          bad_codepoints |= {
-              0x061C,
-              0x200B,
-              0x200C,
-              0x200D,
-              0x200E,
-              0x200F,
-              0xFEFF,
-              0x00AD,
-          }
-
           for file_name in guardrail_files:
               path = Path(file_name)
               if not path.exists():
                   errors.append(f"{file_name}: missing")
                   continue
 
+              data = path.read_bytes()
+
+              if b"\r" in data:
+                  errors.append(f"{file_name}: contains CR or CRLF line endings")
+
               try:
-                  text = path.read_text(encoding="utf-8")
+                  text = data.decode("utf-8")
               except UnicodeDecodeError as exc:
                   errors.append(f"{file_name}: not valid UTF-8: {exc}")
                   continue
 
-              if "\r" in text:
-                  errors.append(f"{file_name}: contains CR or CRLF line endings")
+              if not text.endswith("\n"):
+                  errors.append(f"{file_name}: must end with exactly one LF newline")
 
-              for line_no, line in enumerate(text.splitlines(), 1):
+              if text.endswith("\n\n"):
+                  errors.append(f"{file_name}: must not end with multiple blank lines")
+
+              for line_no, line in enumerate(text.split("\n"), 1):
+                  if line.endswith(" "):
+                      errors.append(f"{file_name}:{line_no}: trailing spaces are not allowed")
+
                   for col_no, ch in enumerate(line, 1):
                       cp = ord(ch)
-                      if cp in bad_codepoints:
-                          name = unicodedata.name(ch, "UNKNOWN")
-                          errors.append(
-                              f"{file_name}:{line_no}:{col_no}: disallowed hidden/bidi character U+{cp:04X} {name}"
-                          )
+                      if 0x20 <= cp <= 0x7E:
+                          continue
+
+                      name = unicodedata.name(ch, "UNKNOWN")
+                      category = unicodedata.category(ch)
+                      errors.append(
+                          f"{file_name}:{line_no}:{col_no}: disallowed non-ASCII or control character "
+                          f"U+{cp:04X} {name} category={category}"
+                      )
 
           agents_text = Path("AGENTS.md").read_text(encoding="utf-8")
           if not agents_text.startswith("---\n"):
               errors.append("AGENTS.md must start with YAML front matter delimiter '---'")
           if "\n---\n" not in agents_text[4:]:
               errors.append("AGENTS.md must contain a closing YAML front matter delimiter")
+          if "This file is the canonical source of truth" not in agents_text:
+              errors.append("AGENTS.md must state that it is the canonical source of truth")
 
           instruction_text = Path(".github/instructions/controlled-maintenance.instructions.md").read_text(encoding="utf-8")
           if not instruction_text.startswith('---\napplyTo: "**"\n---\n'):
